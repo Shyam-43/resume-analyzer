@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Resume Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Profile Header -->
+        <div class="col-12 mb-5">
+            <div class="profile-header">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="profile-avatar me-4">
+                                <i class="fas fa-user-circle fa-4x text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h1 class="display-6 fw-bold mb-2">{{ session.username }}</h1>
+                                <p class="lead text-muted mb-1">{{ session.email }}</p>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    Member since {{ user_data.created_at[:10] if user_data.created_at else 'Unknown' }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="text-start">
+                            <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-upload me-2"></i>New Analysis
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Statistics -->
+        <div class="col-lg-8">
+            <div class="stats-section">
+                <h2 class="section-title mb-4">
+                    <i class="fas fa-chart-bar me-2"></i>Your Statistics
+                </h2>
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="stat-card-profile">
+                            <div class="stat-icon text-primary">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">{{ stats.total_analyses }}</h3>
+                                <p class="stat-label">Total Analyses</p>
+                                <small class="text-muted">Resumes analyzed to date</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="stat-card-profile">
+                            <div class="stat-icon text-success">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">{{ "%.1f"|format(stats.avg_score if stats.avg_score else 0) }}%</h3>
+                                <p class="stat-label">Average Score</p>
+                                <small class="text-muted">Across all your analyses</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="stat-card-profile">
+                            <div class="stat-icon text-warning">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">{{ "%.1f"|format(stats.best_score if stats.best_score else 0) }}%</h3>
+                                <p class="stat-label">Best Score</p>
+                                <small class="text-muted">Your highest achievement</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="stat-card-profile">
+                            <div class="stat-icon text-info">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">{{ "%.0f"|format((stats.best_score - stats.avg_score) if (stats.total_analyses > 1 and stats.best_score and stats.avg_score) else 0) }}%</h3>
+                                <p class="stat-label">Improvement</p>
+                                <small class="text-muted">Best vs. average score</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Insight -->
+                {% if stats.total_analyses > 0 %}
+                <div class="progress-insight mt-4">
+                    <div class="insight-card">
+                        <h4 class="insight-title">
+                            <i class="fas fa-lightbulb text-warning me-2"></i>
+                            Your Progress Insight
+                        </h4>
+                        <div class="insight-content">
+                            {% if stats.avg_score >= 80 %}
+                            <div class="insight-item text-success">
+                                <i class="fas fa-star me-2"></i>
+                                <span><strong>Excellent performance!</strong> Your average score of {{ "%.1f"|format(stats.avg_score) }}% shows you're creating highly relevant resumes.</span>
+                            </div>
+                            {% elif stats.avg_score >= 60 %}
+                            <div class="insight-item text-primary">
+                                <i class="fas fa-thumbs-up me-2"></i>
+                                <span><strong>Good progress!</strong> With an average score of {{ "%.1f"|format(stats.avg_score) }}%, you're on the right track.</span>
+                            </div>
+                            {% else %}
+                            <div class="insight-item text-warning">
+                                <i class="fas fa-arrow-up me-2"></i>
+                                <span><strong>Room for improvement.</strong> Focus on tailoring your resume content to match job descriptions more closely.</span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if stats.total_analyses >= 5 %}
+                            <div class="insight-item text-info">
+                                <i class="fas fa-medal me-2"></i>
+                                <span><strong>Experienced user!</strong> You've completed {{ stats.total_analyses }} analyses. Keep refining your approach!</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Quick Actions & Tips -->
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="quick-actions mb-4">
+                <h3 class="section-title mb-3">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h3>
+                
+                <div class="action-list">
+                    <a href="{{ url_for('upload') }}" class="action-item">
+                        <div class="action-icon text-primary">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <div class="action-content">
+                            <h5 class="action-title">Analyze Resume</h5>
+                            <p class="action-description">Upload a new resume for analysis</p>
+                        </div>
+                        <i class="fas fa-chevron-right action-arrow"></i>
+                    </a>
+                    
+                    <a href="{{ url_for('dashboard') }}" class="action-item">
+                        <div class="action-icon text-success">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="action-content">
+                            <h5 class="action-title">View Dashboard</h5>
+                            <p class="action-description">See all your analysis history</p>
+                        </div>
+                        <i class="fas fa-chevron-right action-arrow"></i>
+                    </a>
+                    
+                    <a href="{{ url_for('about') }}" class="action-item">
+                        <div class="action-icon text-info">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="action-content">
+                            <h5 class="action-title">How It Works</h5>
+                            <p class="action-description">Learn about our analysis process</p>
+                        </div>
+                        <i class="fas fa-chevron-right action-arrow"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tips Card -->
+            <div class="tips-card">
+                <h3 class="tips-title">
+                    <i class="fas fa-tips me-2 text-warning"></i>Pro Tips
+                </h3>
+                
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-check-circle text-success"></i>
+                        </div>
+                        <div class="tip-content">
+                            <h6>Use Keywords</h6>
+                            <p>Include specific keywords from job descriptions in your resume.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-bullseye text-primary"></i>
+                        </div>
+                        <div class="tip-content">
+                            <h6>Tailor Content</h6>
+                            <p>Customize your resume for each job application to improve match scores.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <div class="tip-content">
+                            <h6>Highlight Skills</h6>
+                            <p>Make sure your key skills are prominently displayed and easy to find.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

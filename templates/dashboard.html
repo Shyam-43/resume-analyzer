@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Resume Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Dashboard Header -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="dashboard-header">
+                <h1 class="display-5 fw-bold text-primary mb-2">
+                    <i class="fas fa-chart-line me-3"></i>Dashboard
+                </h1>
+                <p class="lead text-muted">
+                    Welcome back, {{ session.username }}! Here's your resume analysis history.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if analyses %}
+    <!-- Quick Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card-dashboard">
+                <div class="stat-icon text-primary">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{ analyses|length }}</h3>
+                    <p class="stat-label">Total Analyses</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stat-card-dashboard">
+                <div class="stat-icon text-success">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{ "%.1f"|format((analyses|map(attribute='match_score')|sum) / (analyses|length)) }}%</h3>
+                    <p class="stat-label">Average Score</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stat-card-dashboard">
+                <div class="stat-icon text-warning">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{ analyses|map(attribute='match_score')|max }}%</h3>
+                    <p class="stat-label">Best Score</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stat-card-dashboard">
+                <div class="stat-icon text-info">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{ analyses[0].timestamp[:10] if analyses else 'N/A' }}</h3>
+                    <p class="stat-label">Last Analysis</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex gap-3 flex-wrap">
+                <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-upload me-2"></i>Analyze New Resume
+                </a>
+                <a href="{{ url_for('profile') }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-user me-2"></i>View Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis History -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="h3 fw-bold mb-4">
+                <i class="fas fa-history me-2"></i>Analysis History
+            </h2>
+            
+            <div class="row g-4">
+                {% for analysis in analyses %}
+                <div class="col-lg-6 col-xl-4">
+                    <div class="analysis-card" onclick="viewAnalysis('{{ analysis.id }}')" style="cursor: pointer;">
+                        <div class="analysis-header">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="analysis-title">{{ analysis.filename[:30] }}{{ '...' if analysis.filename|length > 30 else '' }}</h5>
+                                    <p class="analysis-date">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        {{ analysis.timestamp[:19].replace('T', ' ') }}
+                                    </p>
+                                </div>
+                                <div class="match-score-badge 
+                                    {% if analysis.match_score >= 80 %}bg-success
+                                    {% elif analysis.match_score >= 60 %}bg-warning
+                                    {% else %}bg-danger{% endif %}">
+                                    {{ analysis.match_score }}%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-body">
+                            <div class="skills-summary mb-3">
+                                <div class="skill-count matched">
+                                    <i class="fas fa-check-circle me-1"></i>
+                                    <span class="fw-semibold">{{ analysis.matched_skills|length }}</span> matched skills
+                                </div>
+                                <div class="skill-count missing">
+                                    <i class="fas fa-times-circle me-1"></i>
+                                    <span class="fw-semibold">{{ analysis.missing_skills|length }}</span> missing skills
+                                </div>
+                            </div>
+                            
+                            {% if analysis.matched_skills %}
+                            <div class="skills-preview mb-3">
+                                <h6 class="skills-preview-title">Matched Skills:</h6>
+                                <div class="skills-tags">
+                                    {% for skill in analysis.matched_skills[:3] %}
+                                    <span class="skill-tag skill-tag-success">{{ skill }}</span>
+                                    {% endfor %}
+                                    {% if analysis.matched_skills|length > 3 %}
+                                    <span class="skill-tag skill-tag-more">+{{ analysis.matched_skills|length - 3 }} more</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if analysis.missing_skills %}
+                            <div class="skills-preview">
+                                <h6 class="skills-preview-title">Missing Skills:</h6>
+                                <div class="skills-tags">
+                                    {% for skill in analysis.missing_skills[:3] %}
+                                    <span class="skill-tag skill-tag-danger">{{ skill }}</span>
+                                    {% endfor %}
+                                    {% if analysis.missing_skills|length > 3 %}
+                                    <span class="skill-tag skill-tag-more">+{{ analysis.missing_skills|length - 3 }} more</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="analysis-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-briefcase me-1"></i>
+                                    Job: {{ analysis.job_description[:50] }}{{ '...' if analysis.job_description|length > 50 else '' }}
+                                </small>
+                                <small class="text-primary fw-semibold">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    {% else %}
+    <!-- Empty State -->
+    <div class="row">
+        <div class="col-12">
+            <div class="empty-state">
+                <div class="empty-state-icon text-muted mb-4">
+                    <i class="fas fa-chart-line fa-4x"></i>
+                </div>
+                <h2 class="empty-state-title">No Analyses Yet</h2>
+                <p class="empty-state-description">
+                    You haven't analyzed any resumes yet. Upload your first resume to get started!
+                </p>
+                <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-upload me-2"></i>Upload Your First Resume
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function viewAnalysis(analysisId) {
+    window.location.href = "{{ url_for('result', analysis_id='') }}" + analysisId;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}About - Resume Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <div class="about-hero">
+                <div class="about-icon text-primary mb-4">
+                    <i class="fas fa-brain fa-4x"></i>
+                </div>
+                <h1 class="display-4 fw-bold mb-3">How Resume Analyzer Works</h1>
+                <p class="lead text-muted">
+                    Learn about the AI-powered technology behind our resume analysis system
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Overview -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="process-section">
+                <h2 class="section-title text-center mb-5">
+                    <i class="fas fa-cogs me-2"></i>Our Analysis Process
+                </h2>
+                
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div class="step-icon text-danger">
+                                <i class="fas fa-file-pdf fa-2x"></i>
+                            </div>
+                            <h4 class="step-title">Text Extraction</h4>
+                            <p class="step-description">
+                                We use PyMuPDF to extract text content from your PDF resume, 
+                                ensuring all relevant information is captured for analysis.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div class="step-icon text-warning">
+                                <i class="fas fa-search fa-2x"></i>
+                            </div>
+                            <h4 class="step-title">Skill Detection</h4>
+                            <p class="step-description">
+                                Our system identifies technical skills, programming languages, 
+                                frameworks, and soft skills mentioned in both your resume and job description.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div class="step-icon text-success">
+                                <i class="fas fa-calculator fa-2x"></i>
+                            </div>
+                            <h4 class="step-title">Similarity Analysis</h4>
+                            <p class="step-description">
+                                Using TF-IDF vectorization and cosine similarity, we calculate how well 
+                                your resume content matches the job requirements.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="tech-section">
+                <h2 class="section-title text-center mb-5">
+                    <i class="fas fa-microchip me-2"></i>Technology Behind the Magic
+                </h2>
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="tech-card">
+                            <div class="tech-header">
+                                <div class="tech-icon text-primary">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <h4 class="tech-title">Machine Learning</h4>
+                            </div>
+                            <div class="tech-content">
+                                <h6>TF-IDF Vectorization</h6>
+                                <p>Converts text into numerical vectors that capture the importance of words and phrases.</p>
+                                
+                                <h6>Cosine Similarity</h6>
+                                <p>Measures the angle between document vectors to determine content similarity.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="tech-card">
+                            <div class="tech-header">
+                                <div class="tech-icon text-success">
+                                    <i class="fas fa-language"></i>
+                                </div>
+                                <h4 class="tech-title">Natural Language Processing</h4>
+                            </div>
+                            <div class="tech-content">
+                                <h6>Text Preprocessing</h6>
+                                <p>Cleans and normalizes text data for optimal analysis accuracy.</p>
+                                
+                                <h6>Pattern Recognition</h6>
+                                <p>Identifies skills and keywords using advanced regular expression patterns.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Libraries Used -->
+                <div class="libraries-section mt-5">
+                    <h3 class="libraries-title text-center mb-4">Libraries & Frameworks</h3>
+                    <div class="libraries-grid">
+                        <div class="library-item">
+                            <i class="fab fa-python text-primary"></i>
+                            <span>Python</span>
+                        </div>
+                        <div class="library-item">
+                            <i class="fas fa-flask text-dark"></i>
+                            <span>Flask</span>
+                        </div>
+                        <div class="library-item">
+                            <i class="fas fa-brain text-info"></i>
+                            <span>scikit-learn</span>
+                        </div>
+                        <div class="library-item">
+                            <i class="fas fa-file-pdf text-danger"></i>
+                            <span>PyMuPDF</span>
+                        </div>
+                        <div class="library-item">
+                            <i class="fas fa-language text-success"></i>
+                            <span>NLTK</span>
+                        </div>
+                        <div class="library-item">
+                            <i class="fab fa-bootstrap text-purple"></i>
+                            <span>Bootstrap</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="features-section">
+                <h2 class="section-title text-center mb-5">
+                    <i class="fas fa-star me-2"></i>Key Features
+                </h2>
+                
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon text-primary">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h5 class="feature-title">Privacy First</h5>
+                            <p class="feature-description">
+                                All processing happens locally. Your resume data is never stored permanently 
+                                or shared with third parties.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon text-success">
+                                <i class="fas fa-zap"></i>
+                            </div>
+                            <h5 class="feature-title">Instant Results</h5>
+                            <p class="feature-description">
+                                Get comprehensive analysis results in seconds, not minutes. 
+                                No waiting for external API calls.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon text-warning">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <h5 class="feature-title">Accurate Matching</h5>
+                            <p class="feature-description">
+                                Our algorithms provide precise skill detection and content similarity 
+                                analysis for reliable results.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon text-info">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h5 class="feature-title">Progress Tracking</h5>
+                            <p class="feature-description">
+                                Keep track of all your analyses and monitor your improvement 
+                                over time with detailed history.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon text-danger">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h5 class="feature-title">Mobile Friendly</h5>
+                            <p class="feature-description">
+                                Responsive design ensures optimal experience across all devices, 
+                                from desktop to mobile.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon text-purple">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h5 class="feature-title">Actionable Insights</h5>
+                            <p class="feature-description">
+                                Receive specific recommendations on how to improve your resume 
+                                for better job matching.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Algorithm Details -->
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="algorithm-section">
+                <h2 class="section-title text-center mb-5">
+                    <i class="fas fa-code me-2"></i>How We Calculate Your Score
+                </h2>
+                
+                <div class="algorithm-explanation">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="algorithm-step">
+                                <div class="step-badge">Step 1</div>
+                                <h5>Text Preprocessing</h5>
+                                <p>We clean and normalize both your resume and the job description, removing noise and standardizing the format.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="algorithm-step">
+                                <div class="step-badge">Step 2</div>
+                                <h5>TF-IDF Vectorization</h5>
+                                <p>Convert text documents into numerical vectors that represent the importance of each word and phrase.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="algorithm-step">
+                                <div class="step-badge">Step 3</div>
+                                <h5>Cosine Similarity</h5>
+                                <p>Calculate the cosine of the angle between document vectors to measure content similarity (0-1 scale).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="algorithm-step">
+                                <div class="step-badge">Step 4</div>
+                                <h5>Skill Bonus</h5>
+                                <p>Add bonus points for each matched skill to reward specific keyword alignment with job requirements.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box mt-4">
+                        <h6 class="formula-title">Final Score Formula:</h6>
+                        <div class="formula">
+                            <code>Final Score = min((Cosine Similarity × 100) + (Matched Skills × 2), 100)</code>
+                        </div>
+                        <small class="text-muted">The final score is capped at 100% for the best possible match.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+            <div class="cta-section">
+                <h2 class="cta-title">Ready to Optimize Your Resume?</h2>
+                <p class="cta-description">
+                    Now that you understand how our system works, put it to the test with your own resume!
+                </p>
+                {% if session.username %}
+                <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-upload me-2"></i>Analyze Your Resume
+                </a>
+                {% else %}
+                <div class="cta-buttons">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-user-plus me-2"></i>Get Started Free
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

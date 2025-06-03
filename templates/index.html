@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Resume Analyzer{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-white py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Boost Your Job Search with AI-Powered Resume Analysis
+                </h1>
+                <p class="lead mb-4">
+                    Get instant feedback on how well your resume matches job descriptions. 
+                    Discover missing skills and improve your chances of landing your dream job.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    {% if session.username %}
+                        <a href="{{ url_for('upload') }}" class="btn btn-light btn-lg px-4">
+                            <i class="fas fa-upload me-2"></i>Analyze Resume
+                        </a>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-lg px-4">
+                            <i class="fas fa-chart-line me-2"></i>View Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('register') }}" class="btn btn-light btn-lg px-4">
+                            <i class="fas fa-user-plus me-2"></i>Get Started Free
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg px-4">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="hero-illustration">
+                    <i class="fas fa-file-alt hero-icon"></i>
+                    <div class="floating-elements">
+                        <div class="skill-tag">Python</div>
+                        <div class="skill-tag">JavaScript</div>
+                        <div class="skill-tag">SQL</div>
+                        <div class="skill-tag">React</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">How It Works</h2>
+                <p class="lead text-muted">
+                    Our AI-powered analysis gives you actionable insights to improve your resume
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card h-100">
+                    <div class="feature-icon text-primary mb-3">
+                        <i class="fas fa-upload fa-3x"></i>
+                    </div>
+                    <h4 class="fw-bold">Upload Resume</h4>
+                    <p class="text-muted">
+                        Upload your PDF resume and paste the job description you're targeting.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card h-100">
+                    <div class="feature-icon text-success mb-3">
+                        <i class="fas fa-brain fa-3x"></i>
+                    </div>
+                    <h4 class="fw-bold">AI Analysis</h4>
+                    <p class="text-muted">
+                        Our machine learning algorithms analyze the match between your resume and job requirements.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card h-100">
+                    <div class="feature-icon text-warning mb-3">
+                        <i class="fas fa-chart-line fa-3x"></i>
+                    </div>
+                    <h4 class="fw-bold">Get Insights</h4>
+                    <p class="text-muted">
+                        Receive a detailed match score, identified skills, and recommendations for improvement.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="display-6 fw-bold mb-4">Why Choose Our Resume Analyzer?</h2>
+                <div class="benefits-list">
+                    <div class="benefit-item d-flex mb-3">
+                        <div class="benefit-icon text-success me-3">
+                            <i class="fas fa-check-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Instant Results</h5>
+                            <p class="text-muted mb-0">Get your analysis results in seconds, not days.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item d-flex mb-3">
+                        <div class="benefit-icon text-success me-3">
+                            <i class="fas fa-shield-alt fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Privacy Focused</h5>
+                            <p class="text-muted mb-0">Your data is processed locally and never shared.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item d-flex mb-3">
+                        <div class="benefit-icon text-success me-3">
+                            <i class="fas fa-bullseye fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Accurate Matching</h5>
+                            <p class="text-muted mb-0">Advanced algorithms ensure precise skill matching.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item d-flex">
+                        <div class="benefit-icon text-success me-3">
+                            <i class="fas fa-history fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Track Progress</h5>
+                            <p class="text-muted mb-0">Keep track of all your analyses and improvements over time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 text-center">
+                <div class="benefits-visual">
+                    <div class="benefit-visual-item">
+                        <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                        <h5>Secure & Private</h5>
+                        <p class="text-muted">Your data stays safe with local processing</p>
+                    </div>
+                    <div class="benefit-visual-item mt-4">
+                        <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                        <h5>Lightning Fast</h5>
+                        <p class="text-muted">Get results in seconds, not minutes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+{% if not session.username %}
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-6 fw-bold mb-3">Ready to Improve Your Resume?</h2>
+                <p class="lead mb-4">
+                    Join thousands of job seekers who have already improved their resumes with our AI-powered analysis.
+                </p>
+                <a href="{{ url_for('register') }}" class="btn btn-light btn-lg px-5">
+                    <i class="fas fa-rocket me-2"></i>Start Analyzing Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Resume - Resume Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <div class="upload-icon text-primary mb-3">
+                    <i class="fas fa-cloud-upload-alt fa-4x"></i>
+                </div>
+                <h1 class="display-5 fw-bold">Upload Your Resume</h1>
+                <p class="lead text-muted">
+                    Upload your PDF resume and provide the job description to get instant analysis
+                </p>
+            </div>
+
+            <!-- Upload Form -->
+            <div class="upload-card">
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <!-- File Upload Section -->
+                    <div class="upload-section mb-4">
+                        <h4 class="section-title">
+                            <i class="fas fa-file-pdf me-2 text-danger"></i>
+                            1. Upload Your Resume (PDF)
+                        </h4>
+                        
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <div class="file-upload-content">
+                                <div class="file-upload-icon text-primary mb-3">
+                                    <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                                </div>
+                                <h5 class="file-upload-title">Drag & Drop your PDF here</h5>
+                                <p class="file-upload-text text-muted">or click to browse files</p>
+                                <input type="file" class="form-control file-input" id="resume" name="resume" 
+                                       accept=".pdf" required>
+                            </div>
+                            <div class="file-upload-selected" id="fileSelected" style="display: none;">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-pdf text-danger fa-2x me-3"></i>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 fw-semibold" id="fileName"></h6>
+                                        <small class="text-muted" id="fileSize"></small>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearFile()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-requirements mt-3">
+                            <h6 class="fw-semibold mb-2">File Requirements:</h6>
+                            <ul class="list-unstyled">
+                                <li class="text-muted"><i class="fas fa-check text-success me-2"></i>PDF format only</li>
+                                <li class="text-muted"><i class="fas fa-check text-success me-2"></i>Maximum file size: 16MB</li>
+                                <li class="text-muted"><i class="fas fa-check text-success me-2"></i>Text-based PDF (not scanned images)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Job Description Section -->
+                    <div class="upload-section mb-4">
+                        <h4 class="section-title">
+                            <i class="fas fa-briefcase me-2 text-info"></i>
+                            2. Paste Job Description
+                        </h4>
+                        
+                        <div class="form-group">
+                            <label for="job_description" class="form-label fw-semibold">Job Description</label>
+                            <textarea class="form-control form-control-lg" id="job_description" name="job_description" 
+                                      rows="10" required placeholder="Paste the complete job description here...
+
+Example:
+We are looking for a Senior Software Engineer with expertise in:
+- Python programming (3+ years)
+- Django/Flask web frameworks
+- SQL databases (PostgreSQL, MySQL)
+- Frontend technologies (HTML, CSS, JavaScript)
+- Version control (Git)
+- Agile development methodologies
+- Problem-solving and analytical skills
+
+Requirements:
+- Bachelor's degree in Computer Science or related field
+- 5+ years of software development experience
+- Strong communication skills
+- Experience with cloud platforms (AWS, Azure)"></textarea>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Include skills, requirements, and responsibilities for better analysis
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Section -->
+                    <div class="upload-section">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg" id="analyzeBtn">
+                                <span class="btn-text">
+                                    <i class="fas fa-brain me-2"></i>Analyze Resume
+                                </span>
+                                <span class="btn-loading" style="display: none;">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    Analyzing...
+                                </span>
+                            </button>
+                        </div>
+                        
+                        <div class="analysis-info mt-3 text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Your data is processed securely and locally. We don't store your resume content.
+                            </small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// File upload handling
+const fileUploadArea = document.getElementById('fileUploadArea');
+const fileInput = document.getElementById('resume');
+const fileSelected = document.getElementById('fileSelected');
+const fileName = document.getElementById('fileName');
+const fileSize = document.getElementById('fileSize');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const uploadForm = document.getElementById('uploadForm');
+
+// Drag and drop functionality
+fileUploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    fileUploadArea.classList.add('drag-over');
+});
+
+fileUploadArea.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    fileUploadArea.classList.remove('drag-over');
+});
+
+fileUploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    fileUploadArea.classList.remove('drag-over');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        handleFileSelect(files[0]);
+    }
+});
+
+// Click to upload
+fileUploadArea.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+    }
+});
+
+function handleFileSelect(file) {
+    if (file.type !== 'application/pdf') {
+        alert('Please select a PDF file.');
+        return;
+    }
+    
+    if (file.size > 16 * 1024 * 1024) {
+        alert('File size must be less than 16MB.');
+        return;
+    }
+    
+    // Update file input
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    fileInput.files = dataTransfer.files;
+    
+    // Show selected file
+    fileName.textContent = file.name;
+    fileSize.textContent = formatFileSize(file.size);
+    
+    fileUploadArea.style.display = 'none';
+    fileSelected.style.display = 'block';
+}
+
+function clearFile() {
+    fileInput.value = '';
+    fileUploadArea.style.display = 'block';
+    fileSelected.style.display = 'none';
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Form submission handling
+uploadForm.addEventListener('submit', (e) => {
+    const btnText = analyzeBtn.querySelector('.btn-text');
+    const btnLoading = analyzeBtn.querySelector('.btn-loading');
+    
+    // Show loading state
+    btnText.style.display = 'none';
+    btnLoading.style.display = 'inline-block';
+    analyzeBtn.disabled = true;
+    
+    // Note: The actual submission will proceed normally
+    // The loading state will be reset when the page reloads or redirects
+});
+
+// Character counter for job description
+const jobDescTextarea = document.getElementById('job_description');
+jobDescTextarea.addEventListener('input', function() {
+    const charCount = this.value.length;
+    const formText = this.nextElementSibling;
+    
+    if (charCount < 100) {
+        formText.innerHTML = '<i class="fas fa-exclamation-triangle text-warning me-1"></i>Please provide a more detailed job description for better analysis';
+        formText.className = 'form-text text-warning';
+    } else {
+        formText.innerHTML = '<i class="fas fa-info-circle me-1"></i>Include skills, requirements, and responsibilities for better analysis';
+        formText.className = 'form-text';
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,7 @@
+{
+  "demo": {
+    "email": "demo@gmail.com",
+    "password_hash": "scrypt:32768:8:1$vcF6ch9CHLUJ0gu0$18aeb49897aa4128ae76a7102918746286dfdde7c1876e31ab0baf4db14fa8697251a22b9f4e8445f7297054b718f3814c82a7e548f863338a87b8f2c5099810",
+    "created_at": "2025-06-02T17:40:15.051327"
+  }
+}

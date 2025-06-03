@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis Result - Resume Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="result-header">
+                {% if from_history %}
+                <div class="mb-3">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+                {% endif %}
+                <div class="result-icon text-success mb-3">
+                    <i class="fas fa-chart-line fa-4x"></i>
+                </div>
+                <h1 class="display-5 fw-bold">
+                    {% if from_history %}Analysis Results{% else %}Analysis Complete!{% endif %}
+                </h1>
+                <p class="lead text-muted">
+                    {% if from_history %}
+                        Analysis for {{ filename }} - {{ analysis_date[:19].replace('T', ' ') }}
+                    {% else %}
+                        Here's how well your resume matches the job requirements
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Score Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="score-card">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <h2 class="score-title">Overall Match Score</h2>
+                        <p class="score-description text-muted">
+                            Based on content similarity and skill matching
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="score-circle 
+                            {% if result.match_score >= 80 %}score-excellent
+                            {% elif result.match_score >= 60 %}score-good
+                            {% elif result.match_score >= 40 %}score-fair
+                            {% else %}score-poor{% endif %}">
+                            <div class="score-number">{{ result.match_score }}%</div>
+                            <div class="score-label">
+                                {% if result.match_score >= 80 %}Excellent Match
+                                {% elif result.match_score >= 60 %}Good Match
+                                {% elif result.match_score >= 40 %}Fair Match
+                                {% else %}Needs Improvement{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Score Breakdown -->
+                <div class="score-breakdown mt-4">
+                    <div class="progress-container">
+                        <div class="progress progress-lg">
+                            <div class="progress-bar 
+                                {% if result.match_score >= 80 %}bg-success
+                                {% elif result.match_score >= 60 %}bg-warning
+                                {% else %}bg-danger{% endif %}" 
+                                style="width: {{ result.match_score }}%"></div>
+                        </div>
+                        <div class="progress-labels">
+                            <span class="progress-label-start">0%</span>
+                            <span class="progress-label-end">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Analysis -->
+    <div class="row g-4 mb-5">
+        <!-- Matched Skills -->
+        <div class="col-lg-6">
+            <div class="skills-card skills-matched">
+                <div class="skills-header">
+                    <h3 class="skills-title">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Matched Skills
+                    </h3>
+                    <div class="skills-count">{{ result.matched_skills|length }}</div>
+                </div>
+                
+                {% if result.matched_skills %}
+                <div class="skills-content">
+                    <p class="skills-description text-success">
+                        Great! These skills from your resume match the job requirements:
+                    </p>
+                    <div class="skills-grid">
+                        {% for skill in result.matched_skills %}
+                        <div class="skill-item skill-matched">
+                            <i class="fas fa-check-circle me-2"></i>
+                            {{ skill.title() }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="skills-content">
+                    <div class="skills-empty">
+                        <i class="fas fa-exclamation-triangle text-warning fa-2x mb-3"></i>
+                        <p class="text-muted">No matching skills were automatically detected.</p>
+                        <small class="text-muted">This might indicate that your resume needs better keyword optimization.</small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Missing Skills -->
+        <div class="col-lg-6">
+            <div class="skills-card skills-missing">
+                <div class="skills-header">
+                    <h3 class="skills-title">
+                        <i class="fas fa-times-circle text-danger me-2"></i>
+                        Missing Skills
+                    </h3>
+                    <div class="skills-count">{{ result.missing_skills|length }}</div>
+                </div>
+                
+                {% if result.missing_skills %}
+                <div class="skills-content">
+                    <p class="skills-description text-danger">
+                        Consider adding these skills to improve your match:
+                    </p>
+                    <div class="skills-grid">
+                        {% for skill in result.missing_skills %}
+                        <div class="skill-item skill-missing">
+                            <i class="fas fa-times-circle me-2"></i>
+                            {{ skill.title() }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="skills-content">
+                    <div class="skills-empty">
+                        <i class="fas fa-star text-success fa-2x mb-3"></i>
+                        <p class="text-success">Excellent! No obvious missing skills detected.</p>
+                        <small class="text-muted">Your resume appears to cover the key requirements well.</small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="recommendations-card">
+                <h3 class="recommendations-title">
+                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                    Recommendations for Improvement
+                </h3>
+                
+                <div class="recommendations-grid">
+                    {% if result.match_score < 60 %}
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon text-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <h5>Improve Content Relevance</h5>
+                            <p>Your match score is below 60%. Consider tailoring your resume content to better align with the job description.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if result.missing_skills|length > 5 %}
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon text-warning">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <h5>Add Key Skills</h5>
+                            <p>{{ result.missing_skills|length }} skills are missing from your resume. Focus on adding the most relevant ones for this role.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if result.matched_skills|length > 0 %}
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <h5>Emphasize Matched Skills</h5>
+                            <p>You have {{ result.matched_skills|length }} matching skills. Make sure they are prominently featured in your resume.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon text-info">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <h5>Optimize Keywords</h5>
+                            <p>Use keywords and phrases from the job description throughout your resume, especially in your summary and experience sections.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="action-buttons">
+                {% if from_history %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+                <a href="{{ url_for('upload') }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-upload me-2"></i>Analyze New Resume
+                </a>
+                {% else %}
+                <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-upload me-2"></i>Analyze Another Resume
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-chart-line me-2"></i>View All Analyses
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Animate the progress bar on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBar = document.querySelector('.progress-bar');
+    const scoreNumber = document.querySelector('.score-number');
+    const targetScore = {{ result.match_score }};
+    
+    // Animate progress bar
+    setTimeout(() => {
+        progressBar.style.transition = 'width 2s ease-in-out';
+        progressBar.style.width = targetScore + '%';
+    }, 500);
+    
+    // Animate score number
+    let currentScore = 0;
+    const scoreInterval = setInterval(() => {
+        currentScore += 1;
+        scoreNumber.textContent = currentScore + '%';
+        
+        if (currentScore >= targetScore) {
+            clearInterval(scoreInterval);
+        }
+    }, 30);
+});
+</script>
+{% endblock %}
